@@ -1,0 +1,11 @@
+.idea/
+target/
+*.iml
+.vagrant/
+*.lck
+*.log
+*.script
+*.data
+Lecture7_SpringDataJPA/develdb.properties
+Lecture6_Hibernate/develdb.properties
+Lecture5_SpringJDBC/develdb.properties

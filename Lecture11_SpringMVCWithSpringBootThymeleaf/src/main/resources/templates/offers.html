@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h3>Spring Boot and Thymeleaf</h3>
+
+<tr th:each="offer: ${offers}">
+    <p th:text="${offer}"></p>
+</tr>
+
+</body>
+</html>

@@ -1,92 +1,209 @@
-# Platforma Java
+### Vagrant setup manual
+
+* Download and install VirtualBOX - https://www.virtualbox.org/wiki/Downloads
+* Download latest Vagrant release - https://www.vagrantup.com/downloads.html
+* Download SSH client  (for Windows)
+    - Putty http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+ 
+* In project directory type **vagrant init**
+* Ensure created Vagrantfile has following content
+
+        VAGRANTFILE_API_VERSION = "2"
+
+        Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+            config.vm.box="ubuntu/trusty64" 
+            config.vm.define "pppj" do |m|        
+                         
+                m.vm.hostname = "pppj.tul.cz"                
+
+                # VM private network ip -> acces it like http://192.168.56.200:8080 (for tomcat)
+                m.vm.network "private_network", ip: "192.168.56.200"
+
+                m.vm.provider :virtualbox do |vb|
+                    vb.name = "pppj"
+                    vb.customize ["modifyvm", :id, "--memory", "2048"]
+                    vb.customize ["modifyvm", :id, "--cpus", "2"]        
+                end  
+           end               
+        end
+
+* Type **vagrant up** in project directory
+* Wait for your VM to boot (should be visible in virtual box gui)
+
+### MySQL install
+
+1. Log in to PPPJ VM
+1. Execute inside VM
+
+        sudo apt-get install mysql-server-5.6
+
+1. Try login
+        
+        sudo mysql -u root -p
+
+1. Inside MySQL cli
+
+         CREATE USER 'vagrant'@'%' IDENTIFIED BY 'vagrant';   
+         GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'%' with grant option;
+
+1. Now you have mysql user **vagrant** with **vagrant** password
+1. Edit /etc/mysql/my.cnf
+
+        sudo nano /etc/mysql/my.cnf
+
+1. Change **bind_address**
+
+        bind-address            = 0.0.0.0
+
+1. Restart MySQL
+
+        sudo restart mysql
+
+1. **Leave VM**
+1. Install MySQL Workbench http://dev.mysql.com/downloads/workbench/
+1. Connect to MySQL server
+
+        ip: 192.168.56.200
+        port: 3306
+        user: vagrant
+        password: vagrant    
+
+### MongoDB install
+
+1. Log in to PPPJ VM
+1. Execute inside VM
+
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+        echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee /etc/apt/sources.list.d/mongodb.list
+
+        sudo apt-get update
+        sudo apt-get install -y mongodb-org              
+
+1. Ensure mongo deamon (mongod) is running
+
+         status mongod
+
+1. Try connect using mongo console
+    
+        mongo
+
+1. Exit mongo console (CTR+C or type quit())
+1. Edit /etc/mongod.conf
+
+        sudo nano /etc/mongod.conf
+
+1. Comment out line with **bind_ip**
+
+        #bind_ip = 127.0.0.1
+
+1. Restart mongod
+
+        sudo restart mongod
+
+1. **Leave VM**
+1. Install Robomongo http://robomongo.org/
+1. Connect to mongo using Robomongo 
+
+        ip: 192.168.56.200
+        port: 27017
+
+### Java 8 install
+
+1. Log in to PPPJ VM
+1. Execute inside VM
+
+        sudo add-apt-repository ppa:webupd8team/java
+        sudo apt-get update
+        sudo apt-get install oracle-java8-installer
+        sudo apt-get install oracle-java8-set-default
+
+1. Reload ssh connection (exit and login into VM again)
+1. Execute inside VM
+    
+        echo $JAVA_HOME
+
+1. Should print _/usr/lib/jvm/java-8-oracle_        
+
+### Tomcat 7 install
+
+1. Log in to PPPJ VM
+1. Execute inside VM
+
+        sudo apt-get install tomcat7  tomcat7-docs tomcat7-examples tomcat7-admin
+        
+1. Will print error on start cause JAVA_HOME is not set
+1. Edit /etc/default/tomcat7
+    
+       sudo nano /etc/default/tomcat7
+
+1. Uncomment and edit following line
+
+        JAVA_HOME=/usr/lib/jvm/java-8-oracle
+
+1. Edit /etc/tomcat7/tomcat-users.xml
+        
+        sudo nano /etc/tomcat7/tomcat-users.xml
+
+1. Insert following XML element inside _tomcat-users_ tag
+
+        <user username="vagrant" password="vagrant" roles="manager-gui"/>
+
+1. Restart Tomcat7
+        
+        sudo service tomcat7 restart
+ 
+1. Leave VM
+1. Visit http://192.168.56.200:8080/
+2. Login http://192.168.56.200:8080/manager 
+
+        user: vagrant
+        passwork: vagrant
+
+### Jenkins install
+
+1. Log in to PPPJ VM
+1. Execute inside VM
+
+        wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+        sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+        sudo apt-get update
+        sudo apt-get install jenkins
+
+1. Edit /etc/default/jenkins
+    
+       sudo nano /etc/default/jenkins
+
+1. Uncomment and edit following line
+
+        HTTP_PORT=9100
+
+1. Restart jenkins
+
+        sudo service jenkins restart
+
+1. Leave VM
+1. Visit http://192.168.56.200:9100/
+
+### RabbitMQ install
+
+1. Log in to PPPJ VM
+1. Execute inside VM
+
+        wget -q -O - http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | sudo apt-key add -
+        sudo sh -c 'echo deb http://www.rabbitmq.com/debian/ testing main > /etc/apt/sources.list.d/rabbitmq.list'
+        sudo apt-get update
+        sudo apt-get install rabbitmq-server
+        sudo rabbitmq-plugins enable rabbitmq_management
+
+        sudo rabbitmqctl add_user vagrant vagrant
+        sudo rabbitmqctl set_user_tags vagrant administrator
+        sudo rabbitmqctl set_permissions -p / vagrant ".*" ".*" ".*"
+        sudo rabbitmqctl delete_user guest
 
 
+1. Login http://192.168.56.200:15672
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/ondrej.smola/platforma-java.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/ondrej.smola/platforma-java/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+        user: vagrant
+        password: vagrant
