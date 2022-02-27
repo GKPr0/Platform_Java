@@ -89,8 +89,12 @@ public class Java7 {
     public void stringSwitch(String a) {
         switch (a) {
             case "A":
+<<<<<<< Updated upstream
                 System.out.println("A");
                 break;
+=======
+                System.out.println("A");break;
+>>>>>>> Stashed changes
             case "B":
                 throw new RuntimeException("B");
             default:

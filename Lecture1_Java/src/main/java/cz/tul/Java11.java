@@ -27,7 +27,7 @@ public class Java11 {
      * quick http get request
      * added in Java 9
      */
-    public void get() throws URISyntaxException, IOException, InterruptedException {
+    public String get() throws URISyntaxException, IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(new URI("https://postman-echo.com/get"))
@@ -35,7 +35,7 @@ public class Java11 {
                 .build();
 
         HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        String jsonResponse = httpResponse.body();
+        return httpResponse.body();
     }
 
 
@@ -46,7 +46,7 @@ public class Java11 {
         List<String> strings = List.of("first", "second");
 
         // Java 10
-        List<Integer> someIntList = new ArrayList<>();
+        List<Integer> someIntList = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8);
         List<Integer> copyList = List.copyOf(someIntList); // unmodifiable copy!!
 
         List<Integer> evenList = someIntList.stream()
@@ -71,18 +71,18 @@ public class Java11 {
      * Java 11
      */
     public void stringApi() {
-        String output = "La ".repeat(2) + "Land";
+        System.out.println("La ".repeat(2) + "Land");
 
-        ("\n\t  hello   \u2005".strip()).equals("hello");
-        ("\n\t  hello   \u2005".trim()).equals("hello   \u2005");
+        System.out.println(("\n\t  hello   \u2005".strip()).equals("hello"));
+        System.out.println(("\n\t  hello   \u2005".trim()).equals("hello   \u2005"));
 
-         if (("\n\t\u2005  ".isBlank()) == true)
+         if ("\n\t\u2005  ".isBlank())
              System.out.println("true");
 
         String multilineStr = "This is\n \n a multiline\n string.";
-        long lineCount = multilineStr.lines() // stream of lines
-                .filter(String::isBlank)
-                .count();
+        System.out.println( multilineStr.lines() // stream of lines
+                            .filter(String::isBlank)
+                            .count());
     }
 
     public void moreJava11() throws IOException {

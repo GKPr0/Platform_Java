@@ -15,23 +15,23 @@ import java.util.stream.StreamSupport;
 
 public class Java8 {
 
-    public void filter() {
+    public long filter() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
-        long count = list.stream().filter(x -> x > 5).collect(Collectors.counting());
+        return list.stream().filter(x -> x > 5).count();
     }
 
-    public void map() {
+    public List<Integer> map() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
-        list.stream().map(x -> x * x).collect(Collectors.toList());
+        return list.stream().map(x -> x * x).collect(Collectors.toList());
     }
 
-    public void reduce() {
+    public int reduce() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
-        int sum = list.stream().reduce(0, (a, b) -> a + b);
+        return list.stream().reduce(0, (a, b) -> a + b);
     }
 
     public void infiniteStream(){
-        IntStream.iterate(0, i -> i + 1);
+          IntStream.iterate(0, i -> i + 1);
     }
 
     public void optional(){
@@ -62,6 +62,8 @@ public class Java8 {
         Period p = Period.between(today, nextMonth);
         Duration d = Duration.between(now, after2Seconds);
         LocalDate nextTuesday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.TUESDAY));
+
+        System.out.println(now);
     }
 
    
