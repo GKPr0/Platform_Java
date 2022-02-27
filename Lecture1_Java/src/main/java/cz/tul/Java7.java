@@ -90,7 +90,7 @@ public class Java7 {
         switch (a) {
             case "A":
                 System.out.println("A");
-                break;gi
+                break;
             case "B":
                 throw new RuntimeException("B");
             default:
