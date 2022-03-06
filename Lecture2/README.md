@@ -39,6 +39,8 @@
       - Small piece of code injected by JIT when loading an object reference from heap (for example, when we access a non-primitive field of an object.)
       - Checks if the loaded object ref has a "bad" color -> if so take action to heal it
       - Or in other words ZGC may perform some processing on the reference before we get it. For example it may remap the object to some other more convenient place.
+      - Load barriers fix the references pointing to relocated objects with a technique called remapping.
+   - <b>Remapping</b>
       1. Checks whether the remap bit is set to 1. If so, it means that the reference is up to date, so can safely we return it.
       2. Then we check whether the referenced object was in the relocation set or not. If it wasn't, that means we didn't want to relocate it. To avoid this check next time we load this reference, we set the remap bit to 1 and return the updated reference.
       3. Now we know that the object we want to access was the target of relocation. The only question is whether the relocation happened or not? If the object has been relocated, we skip to the next step. Otherwise, we relocate it now and create an entry in the forwarding table, which stores the new address for each relocated object. After this, we continue with the next step.
