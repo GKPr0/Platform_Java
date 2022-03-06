@@ -14,6 +14,63 @@
 1. G1
    1. https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html  
    2. https://www.youtube.com/watch?v=OhPGN2Av44E
+   - Generational GC
+   - G1 performs a concurrent global marking phase to determine the liveness of objects throughout the heap. After which it knows which regions are mostly empty.
+   - It collects in these regions first, which usually yields a large amount of free space -> This is why this method of garbage collection is called Garbage-First
+   - G1 concentrates its collection and compaction activity on the areas of the heap that are likely to be full of reclaimable objects, that is, garbage
+   - G1 uses a pause prediction model to meet a user-defined pause time target and selects the number of regions to collect based on the specified pause time target.
+   - <b>Evacuation</b>
+      - G1 copies objects from one or more regions of the heap to a single region on the heap, and in the process both compacts and frees up memory.
+      - Performed in parallel (if possible) to decrese pause time and increase thoughput.
+   - <b>Footprint</b>
+      - Larger JVm process size then older methods (Parallel, CMS)
+      - <b>Remembered Sets</b>
+         - Track object references into a given region. 
+         - There is one RSet per region in the heap. 
+         - The RSet enables the parallel and independent collection of a region. 
+         - The overall footprint impact of RSets is less than 5%
+      - <b>Collection Sets</b>
+         - The set of regions that will be collected in a GC.
+         - All live data in a CSet is evacuated (copied/moved) during a GC.
+         - Sets of regions can be Eden, survivor, and/or old generation. 
+         - CSets have a less than 1% impact on the size of the JVM.
+   - <b>Heap Structure</b>
+      - The heap is one memory area split into many fixed sized regions.
+      - Region size is chosen by the JVM at startup. 
+      - The JVM generally targets around 2000 regions varying in size from 1 to 32Mb.
+      - These regions are mapped into logical representations of <b>Eden, Survivor, and old generation spaces</b>. ->This provides greater flexibility in memory usage.
+      - Live objects are evacuated (i.e., copied or moved) from one region to another
+      - Regions are designed to be collected in parallel with or without stopping all other application threads.
+      - In addition, there is a fourth type of object known as <b>Humongous regions</b>. These regions are designed to hold objects that are 50% the size of a standard region or larger. They are stored as a set of contiguous regions. 
+      - Finally the last type of regions would be the unused areas of the heap.
+   - <b>Young Generation Garbage Collections</b>
+      - Works with Eden and Survivor regions.
+      - Young generation memory is composed of a set of non-contiguous regions. This makes it easy to resize when needed.
+      - Young generation garbage collections are stop the world events. All application threads are stopped for the operation.
+      - Any older objects that have reached their aging threshold are promoted to old generation.
+      - Eden size and survivor size is calculated for the next young GC.
+      - The young GC is done in parallel using multiple threads.
+      - Live objects are copied to new survivor or old generation regions.
+   - <b>Old Generation Garbage Collections</b>
+      -  G1 collector is designed to be a low pause collector for old generation objects.
+      1. <b>Initial Marking Phase</b> (Stop the world)
+         - Mark survivor regions (root regions) which may have references to objects in old generation.
+      2. <b>Concurrent Marking Phase</b>
+         - Traverse the tenured generation object graph for reachable objects
+         - Liveness information is calculated concurrently while the application is running.
+         - This liveness information identifies which regions will be best to reclaim during an evacuation pause.
+      3. <b>Remark Phase</b> (Stop the world)
+         - Empty regions are removed and reclaimed
+         - Region liveness is now calculated for all regions.
+      4. <b>Copying/Cleanup Phase</b>  
+         - Performs accounting on live objects and completely free regions. (Stop the world)
+         - Scrubs the Remembered Sets. (Stop the world)
+         - Reset the empty regions and return them to the free list. (Concurrent)
+         - G1 selects the regions with the lowest "liveness", those regions can be collected the fastest.
+         - Young and old generations are collected at the same time.
+         - Old generation regions are selected based on their liveness.
+      4. <b>After Copying/Cleanup Phase</b> 
+         - The regions selected have been collected and compacted into the old and young generations regions and marked as recently copied
 
 2. ZGC
    1. https://www.baeldung.com/jvm-zgc-garbage-collector
