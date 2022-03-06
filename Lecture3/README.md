@@ -2,6 +2,7 @@
 
 
 # Testing and project management
+- Junit5 intro: https://programmingtechie.com/2020/12/26/junit-5-complete-tutorial/
 
 1. Create Maven project
 2. Implement function that finds all anagrams in a string list
