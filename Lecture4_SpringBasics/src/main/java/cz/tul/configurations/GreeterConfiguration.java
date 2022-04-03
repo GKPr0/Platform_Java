@@ -43,8 +43,6 @@ public class GreeterConfiguration {
         public GreetingService prototypeGreetingService() {
             return new SimpleGreetingService("I DON'T CARE");
         }
-
-
     }
 
     @Configuration

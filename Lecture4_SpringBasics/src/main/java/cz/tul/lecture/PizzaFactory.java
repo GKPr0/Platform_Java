@@ -10,19 +10,11 @@ public class PizzaFactory {
     }
 
     public static Pizza getPizza(String type) {
-        Pizza p;
-        switch (type) {
-            case "normal":
-                p = new Pizza(true, false, false);
-                break;
-            case "all-inclusive":
-                p = new Pizza(true, true, true);
-                break;
-            default:
-                p = new Pizza();
-                break;
-        }
-        return p;
+        return switch (type) {
+            case "normal" -> new Pizza(true, false, false);
+            case "all-inclusive" -> new Pizza(true, true, true);
+            default -> new Pizza();
+        };
     }
 
 

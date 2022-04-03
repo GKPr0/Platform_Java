@@ -11,7 +11,7 @@
 
     <modules>
         <module>Lecture1_Java</module>
-        <module>Lecture3_SpringBasics</module>
+        <module>Lecture4_SpringBasics</module>
         <module>Lecture5_SpringBoot</module>
         <module>Lecture6_SpringJDBCnoSpringBoot</module>
         <module>Lecture6_SpringJDBCwithSpringBootV1</module>
@@ -35,7 +35,6 @@
         <module>Lecture12_RESTimages</module>
         <module>Lecture12_RESTimagesWithSpringBoot</module>
         <module>Lecture14_SpringSecurity</module>
-        <module>Semestral_Project</module>
     </modules>
 
     <properties>
