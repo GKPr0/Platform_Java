@@ -35,6 +35,7 @@
         <module>Lecture12_RESTimages</module>
         <module>Lecture12_RESTimagesWithSpringBoot</module>
         <module>Lecture14_SpringSecurity</module>
+        <module>Lecture3</module>
     </modules>
 
     <properties>
