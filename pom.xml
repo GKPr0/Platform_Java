@@ -36,10 +36,11 @@
         <module>Lecture12_RESTimagesWithSpringBoot</module>
         <module>Lecture14_SpringSecurity</module>
         <module>Lecture3</module>
+        <module>Lecture4_Exercise</module>
     </modules>
 
     <properties>
-        <spring.version>5.1.5.RELEASE</spring.version>
+        <spring.version>5.3.18</spring.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <spring.data.rest.webmvc.version>2.5.1.RELEASE</spring.data.rest.webmvc.version>
         <spring.data.version>1.10.1.RELEASE</spring.data.version>
