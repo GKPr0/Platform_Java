@@ -6,6 +6,8 @@
 2. Study one open source logging stack
    * Elasticsearch + Logstash + Kibana
    * GrafanaLabs Loki + Grafana
+3. Study application containerization using Docker
+
 
 # Exam questions
 
@@ -21,4 +23,8 @@
 5. Describe one of open source logging stack
    1. ELK
    2. Grafana + Loki
+6. Describe following application containerization terms
+   1. Image
+   2. Repository
+   3. Container
 

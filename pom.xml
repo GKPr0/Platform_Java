@@ -13,9 +13,7 @@
         <module>Lecture1_Java</module>
         <module>Lecture4_SpringBasics</module>
         <module>Lecture5_SpringBoot</module>
-        <module>Lecture6_SpringJDBCnoSpringBoot</module>
-        <module>Lecture6_SpringJDBCwithSpringBootV1</module>
-        <module>Lecture6_SpringJDBCwithSpringBootV2</module>
+        <module>Lecture6_SpringJDBC</module>
         <module>Lecture7_Hibernate</module>
         <module>Lecture7_HibernateWithSpringBoot</module>
         <module>Lecture7_HibernateWithSpringBoot-BidirectionalRelation</module>
