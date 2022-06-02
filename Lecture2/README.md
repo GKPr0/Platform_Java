@@ -104,14 +104,14 @@
       4. Now we know that the object was relocated. Either by ZGC, us in the previous step, or the load barrier during an earlier hit of this object. We update this reference to the new location of the object (either with the address from the previous step or by looking it up in the forwarding table), set the remap bit, and return the reference
    - <b>Marking Phases</b>
       - Find the reachable objects and mark then -> Colored pointers
-      1. Start phase (stop-the world)
+      1. <b>Start phase (stop-the world)</b>
          - We look for root references and mark them
          - Root references are the starting points to reach objects in the heap
          - For example, local variables or static fields. 
-      2. Traverse the object graph phase (concurrent)
+      2. <b>Traverse the object graph phase (concurrent)</b>
          - We traverse the object graph, starting from the root references. We mark every object 
          we reach. Also, when a load barrier detects an unmarked reference, it marks it too.
-      3. End phase (stop-the-world)
+      3. <b>End phase (stop-the-world)</b>
          - Synchronization purpose 
          - Handle some edge cases, like weak references.
    - <b>Relocation phases</b>
@@ -130,21 +130,26 @@
 
 
 # Exam questions
-1. Describe JVM heap and stack. Which variables are stored on heap and which on stack
+1. <b>Describe JVM heap and stack. Which variables are stored on heap and which on stack</b>
  - JVM is stack based.
  - JVM heap contains objects, array, definitions of classes, etc.
  - JVM stack contains local variables, method arguments, etc.
-2. How does GC work
+2. <b>How does GC work</b>
    1. Stop the world 
    2. GC roots
-3. Describe G1 collector
-4. Describe ZGC collector
-5. Compare G1 vs ZGC
-6. Describe bytecode (groups, prefix/suffix, operand types)
-   - Groups indicatas the parts of the bytecode that are related. At he beginign of the group there is a description of the group containing the max stack size, number of locals and number of arguments
-   - Preffix indicates types of the variable on which will be the operation performed. iload -> integer, aload -> object reference, etc.
-   - Suffix indicates index of local variable. aload_0 means load the first local variable in case of non static method it is this.
-   - Oprarand types:
+3. <b>Describe G1 collector</b>
+4. <b>Describe ZGC collector</b>
+5. <b>Compare G1 vs ZGC</b>
+6. <b>Describe bytecode (groups, prefix/suffix, operand types)</b>
+   - <b>Groups</b>
+      - indicatas the parts of the bytecode that are related. 
+      - At he begining of the group there is a description of the group containing the max stack size, number of locals and number of arguments
+   - <b>Preffix</b>
+      - indicates types of the variable on which will be the operation performed. 
+      - iload -> integer, aload -> object reference, etc.
+   - <b>Suffix</b>
+      - indicates index of local variable. aload_0 means load the first local variable in case of non static method it is this.
+   - <b>Oprarand types:</b>
       - i -> integer
       - l -> long
       - f -> float
@@ -153,28 +158,23 @@
       - b -> byte
       - c -> char
       - a -> object reference
-7. How is bytecode generated and how can be viewed
+7. <b>How is bytecode generated and how can be viewed</b>
    - Is generated using Java compiler (javac) -> *.class files
    - Can be viewed using javap
-8. Describe operand stack and local variables array
+8. <b>Describe operand stack and local variables array</b>
    - Operand stack descripes how the various individual bytecode operations get their input, and how they provide their output. For example to use iadd we firstly need to push 2 integers to the stack
    - Local varialbes array are consider as a reference type objects and to work with them we use xaload, xastora, etc. Where x is the any operand type.
-9. Describe how does bytecode interpretation works in runtime
+9. <b>Describe how does bytecode interpretation works in runtime</b>
    - Classloader loads a *.class files that contains the bytecode and creates a class object
    - Class object is used to create an instance of the class
    - Then it works like descriped below
-10. What is JIT compilation, how does it work
-   - The Just-In-Time (JIT) compiler is a component of the Java™ Runtime Environment that improves the performance of Java applications at run time.
-
-   - Java programs consists of classes, which contain platform-neutral bytecodes that can be interpreted by a JVM on many different computer architectures. At run time, the JVM loads the class files, determines the semantics of each individual bytecode, and performs the appropriate computation. The additional processor and memory usage during interpretation means that a Java application performs more slowly than a native application. The JIT compiler helps improve the performance of Java programs by compiling bytecodes into native machine code at run time.
-
-   - The JIT compiler is enabled by default, and is activated when a Java method is called. The JIT compiler compiles the bytecodes of that method into native machine code, compiling it "just in time" to run. When a method has been compiled, the JVM calls the compiled code of that method directly instead of interpreting it. Theoretically, if compilation did not require processor time and memory usage, compiling every method could allow the speed of the Java program to approach that of a native application.
-
-   - JIT compilation does require processor time and memory usage. When the JVM first starts up, thousands of methods are called. Compiling all of these methods can significantly affect startup time, even if the program eventually achieves very good peak performance.
-
-   - In practice, methods are not compiled the first time they are called. For each method, the JVM maintains a call count, which is incremented every time the method is called. The JVM interprets a method until its call count exceeds a JIT compilation threshold. Therefore, often-used methods are compiled soon after the JVM has started, and less-used methods are compiled much later, or not at all. The JIT compilation threshold helps the JVM start quickly and still have improved performance. The threshold has been carefully selected to obtain an optimal balance between startup times and long term performance.
-
-   - After a method is compiled, its call count is reset to zero and subsequent calls to the method continue to increment its count. When the call count of a method reaches a JIT recompilation threshold, the JIT compiler compiles it a second time, applying a larger selection of optimizations than on the previous compilation. This process is repeated until the maximum optimization level is reached. The busiest methods of a Java program are always optimized most aggressively, maximizing the performance benefits of using the JIT compiler. The JIT compiler can also measure operational data at run time, and use that data to improve the quality of further recompilations.
+10. <b>What is JIT compilation, how does it work</b>
+      - The Just-In-Time (JIT) compiler is a component of the Java™ Runtime Environment that improves the performance of Java applications at run time.
+      - Java programs consists of classes, which contain platform-neutral bytecodes that can be interpreted by a JVM on many different computer architectures. At run time, the JVM loads the class files, determines the semantics of each individual bytecode, and performs the appropriate computation. The additional processor and memory usage during interpretation means that a Java application performs more slowly than a native application. The JIT compiler helps improve the performance of Java programs by compiling bytecodes into native machine code at run time.
+      - The JIT compiler is enabled by default, and is activated when a Java method is called. The JIT compiler compiles the bytecodes of that method into native machine code, compiling it "just in time" to run. When a method has been compiled, the JVM calls the compiled code of that method directly instead of interpreting it. Theoretically, if compilation did not require processor time and memory usage, compiling every method could allow the speed of the Java program to approach that of a native application.
+      - JIT compilation does require processor time and memory usage. When the JVM first starts up, thousands of methods are called. Compiling all of these methods can significantly affect startup time, even if the program eventually achieves very good peak performance.
+      - In practice, methods are not compiled the first time they are called. For each method, the JVM maintains a call count, which is incremented every time the method is called. The JVM interprets a method until its call count exceeds a JIT compilation threshold. Therefore, often-used methods are compiled soon after the JVM has started, and less-used methods are compiled much later, or not at all. The JIT compilation threshold helps the JVM start quickly and still have improved performance. The threshold has been carefully selected to obtain an optimal balance between startup times and long term performance.
+      - After a method is compiled, its call count is reset to zero and subsequent calls to the method continue to increment its count. When the call count of a method reaches a JIT recompilation threshold, the JIT compiler compiles it a second time, applying a larger selection of optimizations than on the previous compilation. This process is repeated until the maximum optimization level is reached. The busiest methods of a Java program are always optimized most aggressively, maximizing the performance benefits of using the JIT compiler. The JIT compiler can also measure operational data at run time, and use that data to improve the quality of further recompilations.
 
 
 

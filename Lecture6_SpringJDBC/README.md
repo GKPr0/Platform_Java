@@ -3,13 +3,13 @@
 
 # Exam question
 
-1. Describe how does Spring JDBC interact with relational database
+1. <b>Describe how does Spring JDBC interact with relational database</b>
     - Spring JDBC is API that is used to interact with relational database on low level efficiently.
     - To communicate with specific DB specific driver is needed.
     - Automatically takes care of managing db connection, executing queries, transactions, exceptions handling.
     - User defines the connection parameters and SQL queries and its parameters
     - To transfer data from relational database to Java object user need to create RowMapper< T >
-2. Describe Spring transactions and their properties
+2. <b>Describe Spring transactions and their properties</b>
     - @Transactional - marks a method as transactional.
     - A database transaction is a sequence of actions that are treated as a single unit of work
     - ACID:

@@ -10,11 +10,11 @@
 
 
 # Exam questions
-1. Describe 5 new features in Java since version 7
+1. <b>Describe 5 new features in Java since version 7</b>
     - Switch Expressions -> https://openjdk.java.net/jeps/325
     - Pattern Matching for instanceof -> https://openjdk.java.net/jeps/375
 
-2. What is local type inference (Java 10) -> https://openjdk.java.net/jeps/286
+2. <b>What is local type inference (Java 10)</b> -> https://openjdk.java.net/jeps/286
     - The inference process, substantially, just gives the variable the type of its initializer expression
     - The initializer has no target type (because we haven't inferred it yet). Poly expressions that require such a type, like lambdas, method references, and array initializers, will trigger an error.
     - If the initializer has the null type, an error occurs—like a variable without an initializer, this variable is probably intended to be initialized later, and we don't know what type will be wanted.
@@ -23,7 +23,7 @@
             var stream = list.stream();          // infers Stream<String>
 
 
-3. Describe Java records in (Java 15) -> https://openjdk.java.net/jeps/384
+3. <b>Describe Java records in (Java 15)</b> -> https://openjdk.java.net/jeps/384
     - Records are classes that act as transparent carriers for immutable data. Records can be thought of as nominal tuples.
     - Reduce boilerplate code -> automatically implements methods ToString(), hashCode(), equals()
     - Geter will be also automatically generated
@@ -64,7 +64,7 @@
             }
 
 
-3. Describe Java sealed classes introduced (Java 17) -> https://openjdk.java.net/jeps/360, https://openjdk.java.net/jeps/409
+3. <b>Describe Java sealed classes introduced (Java 17)</b> -> https://openjdk.java.net/jeps/360, https://openjdk.java.net/jeps/409
     - A sealed class or interface can be extended or implemented only by those classes and interfaces permitted to do so.
 
             package com.example.geometry;
@@ -94,7 +94,7 @@
                 }
             }
 
-4. Difference between Java and JVM
+4. <b>Difference between Java and JVM</b>
 
     | JAVA  | JVM |
     | ------------- | ------------- |
@@ -106,4 +106,4 @@
     || This independence from hardware and operating system is what makes java program write-once run-anywhere |
   
 
-5. How does a HashTable works? -> https://www.youtube.com/watch?v=KyUTuwz_b7Q
+5. <b>How does a HashTable works?</b> -> https://www.youtube.com/watch?v=KyUTuwz_b7Q
